@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quote of the Day</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <script src="https://kit.fontawesome.com/6799f7af12.js" crossorigin="anonymous"></script> 
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: #eeeef3;
+            color: #333;
+            text-align: center;
+        }
+
+        .container {
+            background: #fff;
+            padding: 5%;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 90%;
+            width: 100%;
+            text-align: left;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        h2 {
+            margin-top: 10px;
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            text-align: center;
+        }
+
+        .quote-container {
+            position: relative;
+            margin: 5% 0;
+        }
+
+        .quote-container::before,
+        .quote-container::after {
+            content: '';
+            font-size: 3em;
+            color: black;
+            position: absolute;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .quote-container::before {
+            content: '“';
+            left: 0;
+            top: -0.5em;
+        }
+
+        .quote-container::after {
+            content: '”';
+            right: 0.5em;
+            bottom: -1em;
+        }
+
+        #quoteDisplay {
+            font-size: 1.5em;
+            color: #333;
+            font-style: italic;
+            padding-left: 2em;
+            padding-right: 1.5em;
+            line-height: 1.5;
+        }
+
+        .author {
+            font-size: 1.2em;
+            color: #555;
+            text-align: right;
+            margin-top: 1em;
+        }
+
+        .divider {
+            margin: 2em 0;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .quote-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .quote-icons {
+            display: flex;
+            gap: 1em;
+        }
+
+        .quote-icons i {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 2.5em;
+            height: 2.5em;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #f06,#3CF);
+            color: #fff;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .quote-icons i:hover {
+            background-color: #3a4eb8;
+        }
+
+        .ellipsis-icon {
+            position: absolute;
+            cursor: pointer;
+            background-color: #fff;
+            border-radius: 50%;
+            top: 1em;
+            right: 1.5em;
+            display: inline-block;
+        }
+
+        .ellipsis-icon i {
+            color: #333;
+        }
+
+        .translation-options {
+            position: absolute;
+            top: 2em;
+            right: 0.5em;
+            background: #fff;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 0.5em;
+            z-index: 1;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .translation-options.show {
+            opacity: 1;
+        }
+
+        .translation-options.hide {
+            opacity: 0;
+        }
+
+        .translation-option {
+            cursor: pointer;
+            padding: 0.5em 0;
+        }
+
+        .translation-option:hover {
+            background-color: #f0f0f0;
+        }
+
+        button {
+            padding: 0.5em 1em;
+            font-size: 1em;
+            color: #fff;
+            background:linear-gradient(45deg, #f06,#3CF);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background: linear-gradient(45deg, #f06,#3CF);
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 5px !important; 
+            }
+
+            h2 {
+                font-size: 18px;
+            }
+
+            #quoteDisplay {
+                font-size: 14px;
+            }
+
+            .author {
+                font-size: 12px;
+            }
+
+            .quote-icons i {
+                width: 28px;
+                height: 28px;
+                font-size: 16px;
+            }
+
+            .quote-controls {
+                margin-top: 10px;
+            }
+
+            button,
+            select {
+                padding: 0.4em 0.8em;
+                font-size: 0.9em;
+            }
+
+            .ellipsis-icon {
+                top: 0.5em;
+                right: 1em;
+            }
+
+            .translation-options {
+                top: 1em;
+                right: 0.5em;
+            }
+        }
+
+        @media (min-width: 768px) and (max-width: 1024px)  {
+            .container {
+                padding: 15px; 
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            #quoteDisplay {
+                font-size: 16px;
+            }
+
+            .author {
+                font-size: 14px;
+            }
+
+            .quote-icons i {
+                font-size: 18px;
+                width: 36px;
+                height: 36px;
+            }
+
+            .quote-controls {
+                margin-top: 15px;
+            }
+
+            button,
+            select {
+                padding: 0.4em 0.8em;
+                font-size: 0.9em;
+            }
+
+            .ellipsis-icon {
+                top: 0.5em;
+                right: 1em;
+            }
+
+            .translation-options {
+                top: 1em;
+                right: 0.5em;
+            }
+        }
+        @media (max-width: 1440px)  {
+            .container {
+                padding: 8px; 
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            #quoteDisplay {
+                font-size: 16px;
+            }
+
+            .author {
+                font-size: 14px;
+            }
+
+            .quote-icons i {
+                font-size: 18px;
+                width: 36px;
+                height: 36px;
+            }
+
+            .quote-controls {
+                margin-top: 15px;
+            }
+
+            button,
+            select {
+                padding: 0.4em 0.8em;
+                font-size: 0.9em;
+            }
+
+            .ellipsis-icon {
+                top: 0.5em;
+                right: 1em;
+            }
+
+            .translation-options {
+                top: 1em;
+                right: 0.5em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Quote of the Day</h2>
+        <div class="ellipsis-icon" onclick="toggleTranslationOptions()">
+            <i class="fas fa-ellipsis-vertical"></i>
+            <div class="translation-options" id="translationOptions">
+                <div class="translation-option" data-lang="ko" style="font-size: 0.9em;" onclick="translateTo('ko')">Korean</div>
+                <div class="translation-option" data-lang="es" style="font-size: 0.9em;" onclick="translateTo('es')">Spanish</div>
+                <div class="translation-option" data-lang="tl" style="font-size: 0.9em;" onclick="translateTo('tl')">Tagalog</div>
+                <div class="translation-option" data-lang="man" style="font-size: 0.9em;" onclick="translateTo('man')">Mandarin</div>
+                <div class="translation-option" data-lang="eng" style="font-size: 0.9em;" onclick="translateTo('eng')">English</div>
+            </div>
+        </div>
+        <div class="quote-container">
+            <p id="quoteDisplay" style="font-size: 1.5em;">Never give up because you never know if the next try is going to be the one that works.</p>
+        </div>
+        <p class="author">— Mary Kay Ash</p>
+        <div class="divider"></div>
+        <div class="quote-controls">
+            <div class="quote-icons">
+                <i class="fas fa-volume-high" aria-hidden="true" onclick="speakQuote()"></i>
+                <i class="far fa-copy" aria-hidden="true" onclick="copyQuote()"></i>
+                <i class="fab fa-twitter" aria-hidden="true" onclick="shareOnTwitter()"></i>
+            </div>
+            <button onclick="generateQuote()">New Quote</button>
+        </div>
+    </div>
+
+    <script>
+        const quotes = [
+            { 
+                text: "Never give up because you never know if the next try is going to be the one that works.",
+                author: "Mary Kay Ash",
+                translations: {
+                    ko: { text: "다음 시도가 작동할 것인지 알 수 없으므로 포기하지 마십시오.", author: "Mary Kay Ash" },
+                    es: { text: "Nunca te rindas porque nunca sabes si el próximo intento será el que funcione.", author: "Mary Kay Ash" },
+                    tl: { text: "Huwag kang susuko dahil hindi mo alam kung ang susunod na pagsubok ay ang magtatrabaho.", author: "Mary Kay Ash" },
+                    man: { text: "永不放弃，因为你永远不知道下一次尝试是否会成功。", author: "Mary Kay Ash" }
+                }
+            },
+            { 
+                text: "The only limit to our realization of tomorrow is our doubts of today.", 
+                author: "Franklin D. Roosevelt",
+                translations: {
+                    ko: { text: "우리의 내일의 깨달음의 유일한 한계는 오늘의 의심입니다.", author: "Franklin D. Roosevelt" },
+                    es: { text: "El único límite para nuestra realización de mañana son nuestras dudas de hoy.", author: "Franklin D. Roosevelt" },
+                    tl: { text: "Ang tanging limitasyon sa ating pag-unawa sa bukas ay ang ating pag-aalinlangan ngayon.", author: "Franklin D. Roosevelt" },
+                    man: { text: "我们对明天的实现的唯一限制是我们今天的疑虑。", author: "Franklin D. Roosevelt" }
+                }
+            },
+            { 
+                text: "The way to get started is to quit talking and begin doing.", 
+                author: "Walt Disney",
+                translations: {
+                    ko: { text: "시작하는 방법은 말을 그만두고 시작하는 것입니다.", author: "Walt Disney" },
+                    es: { text: "La forma de empezar es dejar de hablar y empezar a hacer.", author: "Walt Disney" },
+                    tl: { text: "Ang paraan para simulan ay tigilan ang pagsasalita at magsimula ng paggawa.", author: "Walt Disney" },
+                    man: { text: "开始的方法是停止说话并开始行动。", author: "Walt Disney" }
+                }
+            },
+            { 
+                text: "Don't watch the clock; do what it does. Keep going.", 
+                author: "Sam Levenson",
+                translations: {
+                    ko: { text: "시계를 보지 마세요. 시계가 하는 일을하세요. 계속하십시오.", author: "Sam Levenson" },
+                    es: { text: "No mires el reloj; haz lo que hace. Sigue adelante.", author: "Sam Levenson" },
+                    tl: { text: "Wag pansinin ang orasan; gawin ang ginagawa nito. Magpatuloy.", author: "Sam Levenson" },
+                    man: { text: "不要看时钟; 做它所做的。 继续。", author: "Sam Levenson" }
+                }
+            },
+            { 
+                text: "Success is not final, failure is not fatal: It is the courage to continue that counts.", 
+                author: "Winston Churchill",
+                translations: {
+                    ko: { text: "성공은 최종이 아니며, 실패는 치명적이지 않습니다. 계속하는 용기가 중요합니다.", author: "Winston Churchill" },
+                    es: { text: "El éxito no es definitivo, el fracaso no es fatal: es el coraje para continuar lo que cuenta.", author: "Winston Churchill" },
+                    tl: { text: "Ang tagumpay ay hindi pangwakas, ang kabiguan ay hindi fatal: Ang tapang na magpatuloy ang mahalaga.", author: "Winston Churchill" },
+                    man: { text: "成功不是最终的，失败不是致命的：继续的勇气才是最重要的。", author: "Winston Churchill" }
+                }
+            },
+            { 
+                text: "The only way to do great work is to love what you do.", 
+                author: "Steve Jobs",
+                translations: {
+                    ko: { text: "최고의 작업을 하는 유일한 방법은 당신이 하는 일을 사랑하는 것입니다.", author: "Steve Jobs" },
+                    es: { text: "La única forma de hacer un gran trabajo es amar lo que haces.", author: "Steve Jobs" },
+                    tl: { text: "Ang tanging paraan upang gawin ang dakilang trabaho ay upang mahalin ang ginagawa mo.", author: "Steve Jobs" },
+                    man: { text: "做出伟大工作的唯一方法是热爱你所做的事情。", author: "Steve Jobs" }
+                }
+            }
+        ];
+
+        let currentQuoteIndex = 0;
+        let currentLanguage = 'eng';
+
+        function generateQuote() {
+            currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+            updateQuoteDisplay();
+        }
+
+        function updateQuoteDisplay() {
+            const currentQuote = quotes[currentQuoteIndex];
+            const translation = currentQuote.translations[currentLanguage];
+            const quoteDisplay = document.getElementById('quoteDisplay');
+            const authorDisplay = document.querySelector('.author');
+            
+            if (currentLanguage === 'eng') {
+                quoteDisplay.innerText = currentQuote.text;
+                authorDisplay.innerText = `— ${currentQuote.author}`;
+            } else {
+                quoteDisplay.innerText = translation.text;
+                authorDisplay.innerText = `— ${translation.author}`;
+            }
+        }
+
+        function speakQuote() {
+            const currentQuote = quotes[currentQuoteIndex];
+            const translation = currentQuote.translations[currentLanguage];
+            const textToSpeak = currentLanguage === 'eng' ? `${currentQuote.text} — ${currentQuote.author}` : `${translation.text} — ${translation.author}`;
+            
+            const utterance = new SpeechSynthesisUtterance(textToSpeak);
+            
+            switch (currentLanguage) {
+                case 'ko':
+                    utterance.lang = 'ko-KR';
+                    break;
+                case 'es':
+                    utterance.lang = 'es-ES';
+                    break;
+                case 'tl':
+                    utterance.lang = 'tl-PH';
+                    break;
+                case 'man':
+                    utterance.lang = 'zh-CN';
+                    break;
+                default:
+                    utterance.lang = 'en-US';
+            }
+            
+            speechSynthesis.cancel(); 
+            speechSynthesis.speak(utterance);
+        }
+
+        function copyQuote() {
+            const currentQuote = quotes[currentQuoteIndex];
+            const translation = currentQuote.translations[currentLanguage];
+            const textToCopy = currentLanguage === 'eng' ? `${currentQuote.text} — ${currentQuote.author}` : `${translation.text} — ${translation.author}`;
+
+            const textArea = document.createElement('textarea');
+            textArea.value = textToCopy;
+            document.body.appendChild(textArea);
+            textArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(textArea);
+            alert('Quote copied to clipboard!');
+        }
+
+        function shareOnTwitter() {
+            const currentQuote = quotes[currentQuoteIndex];
+            const translation = currentQuote.translations[currentLanguage];
+            const textToShare = currentLanguage === 'eng' ? `${currentQuote.text} — ${currentQuote.author}` : `${translation.text} — ${translation.author}`;
+            const twitterUrl = `https://twitter.com/intent/tweet?text=${encodeURIComponent(textToShare)}`;
+            window.open(twitterUrl, '_blank');
+        }
+
+        function toggleTranslationOptions() {
+            const translationOptions = document.getElementById('translationOptions');
+            translationOptions.classList.toggle('show');
+            translationOptions.classList.remove('hide');
+        }
+
+        function translateTo(language) {
+            currentLanguage = language;
+            updateQuoteDisplay();
+
+            const translationOptions = document.querySelectorAll('.translation-option');
+            translationOptions.forEach(option => {
+                if (option.getAttribute('data-lang') === language) {
+                    option.classList.add('selected');
+                } else {
+                    option.classList.remove('selected');
+                }
+            });
+
+            const optionsContainer = document.getElementById('translationOptions');
+            optionsContainer.classList.add('hide');
+            setTimeout(() => {
+                optionsContainer.classList.remove('show'); 
+            }, 300);
+        }
+    </script>
+</body>
+</html>
